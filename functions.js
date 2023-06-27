@@ -2,6 +2,34 @@
 
 const BASE_URL = "https://formulabot.com/api/1.1/wf/";
 
+
+async function callAPI(endpoint, payload) {
+  const BASE_URL = "https://formulabot.com/api/1.1/wf/";
+  var Token = localStorage.getItem("token");
+  console.log(Token);
+  try {
+    const url = BASE_URL + endpoint;
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${Token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload), // Use "body" instead of "payload" for the request body
+    };
+    console.log("CALL API OPTIONS", url, options);
+    var response = await fetch(url, options);
+    console.log(response);
+    var resp = await response.json();
+    console.log("CALL API RESP", resp);
+    var result = resp?.response?.output ?? "No Result Found";
+    return result;
+  } catch (e) {
+    return "No Result Found " + e;
+  }
+}
+
+
 /**
  * =FORMULABOT.CLASSIFY(cell_to_classify_type, cell_to_classify, cell_to_classify_based_on, option1, option2,...)
  * Ex:=FORMULABOT.CLASSIFY("Company",A1,"Industry","Tech","Retail")
@@ -218,28 +246,4 @@ async function INFER(input_examples, output_examples, input_to_predict) {
 
 
 
-async function callAPI(endpoint, payload) {
-  const BASE_URL = "https://formulabot.com/api/1.1/wf/";
-  var Token = localStorage.getItem("token");
-  console.log(Token);
-  try {
-    const url = BASE_URL + endpoint;
-    const options = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${Token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload), // Use "body" instead of "payload" for the request body
-    };
-    console.log("CALL API OPTIONS", url, options);
-    var response = await fetch(url, options);
-    console.log(response);
-    var resp = await response.json();
-    console.log("CALL API RESP", resp);
-    var result = resp?.response?.output ?? "No Result Found";
-    return result;
-  } catch (e) {
-    return "No Result Found " + e;
-  }
-}
+
